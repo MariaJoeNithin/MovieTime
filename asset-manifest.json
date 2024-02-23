@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/MovieTime/static/css/main.bbabe68d.css",
+    "main.js": "/MovieTime/static/js/main.01b155dc.js",
+    "static/media/MovieCon.gif": "/MovieTime/static/media/MovieCon.64911dbc423be2f116b0.gif",
+    "index.html": "/MovieTime/index.html",
+    "main.bbabe68d.css.map": "/MovieTime/static/css/main.bbabe68d.css.map",
+    "main.01b155dc.js.map": "/MovieTime/static/js/main.01b155dc.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.bbabe68d.css",
+    "static/js/main.01b155dc.js"
+  ]
+}
