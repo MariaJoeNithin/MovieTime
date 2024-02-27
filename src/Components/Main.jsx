@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import request from "../Apirqst";
 import axios from "axios";
 import Slideshow from "../pages/Slideshow";
@@ -43,7 +43,7 @@ const Main = () => {
         // speed={500}
       >
         {movies.map((item) => (
-          <SwiperSlide key={item.id}>
+          <SwiperSlide key={item?.id}>
             <Slideshow item={item} />
           </SwiperSlide>
         ))}

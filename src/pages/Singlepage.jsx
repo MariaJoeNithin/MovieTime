@@ -21,7 +21,7 @@ const Singlepage = () => {
   const { MediaType } = useParams();
   const [image, setImage] = useState([]);
   const [Movie, setMovie] = useState([]);
-  const [vdoLink, setVdoLink] = useState([]);
+  const [vdoLink, setVdoLink] = useState(null);
   const [vdoname, setVdoName] = useState([]);
   const [videoLink, setVideoLink] = useState([]);
   const [crewMembers, setCrewMembers] = useState([]);
@@ -108,9 +108,17 @@ const Singlepage = () => {
 
   console.log(videoLink);
 
-  const youtubeKey = videoLink?.find(
+  const trailer = videoLink?.filter(
     (vdo) => vdo.type === "Trailer" && vdo.official
-  )?.key;
+  );
+
+  let length = trailer.length - 1;
+
+  console.log(trailer);
+
+  const youtubeKey =
+    trailer.length !== 0 ? trailer?.[length]?.key : videoLink?.[0]?.key || null;
+
   console.log(youtubeKey);
 
   const slideLeft = (id) => {
@@ -192,9 +200,7 @@ const Singlepage = () => {
           >
             <iframe
               className="min-w-[220px] w-full h-auto  min-h-96 rounded-lg"
-              src={`https://www.youtube.com/embed/${
-                youtubeKey ? youtubeKey : vdoLink[0]
-              }`}
+              src={`https://www.youtube.com/embed/${youtubeKey}`}
               title={`${Movie?.title}`}
               frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -221,7 +227,7 @@ const Singlepage = () => {
                     className="border border-white rounded-xl  bg-black/50 backdrop-blur-2xl min-h-[270px]"
                     key={index}
                   >
-                    <div className="h-[200px] min-w-[160px] rounded-xl overflow-hidden ">
+                    <div className="h-[200px] max-h-[200px] max-w-[160px] w-[160px] rounded-xl overflow-hidden ">
                       <img
                         src={
                           item.profile_path
@@ -285,7 +291,7 @@ const Singlepage = () => {
           <iframe
             className="min-w-[220px] max-w-5xl mx-auto w-full h-auto shadow-xl min-h-96 rounded-lg mb-8 border border-white"
             src={`https://www.youtube.com/embed/${
-              vdoLink ? vdoLink : youtubeKey
+              vdoLink ? vdoLink : videoLink?.[0]?.key
             }`}
             title={`${vdoname}`}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

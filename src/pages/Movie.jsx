@@ -10,13 +10,15 @@ import "./movieUi.css";
 import { Link, useNavigate } from "react-router-dom";
 
 const Movie = ({ item, mediaType }) => {
+  // console.log(mediaType);
+
+  mediaType = mediaType ? mediaType : "movie";
+
   const [like, setLike] = useState(false);
   // const [saved, setSaved] = useState(false);
   const { user } = UserAuth();
   const [alreadySaved, setAlreadySaved] = useState([]);
   const navigate = useNavigate();
-
-  mediaType = mediaType ? mediaType : "movie";
 
   const movieID = doc(db, "users", `${user?.email}`);
   const savedShows = async () => {
@@ -40,7 +42,9 @@ const Movie = ({ item, mediaType }) => {
     if (user?.email) {
       setLike(!like);
       // setSaved(true);
-      const showArray = alreadySaved.filter((show) => show.item.id !== item.id);
+      const showArray = alreadySaved?.filter(
+        (show) => show?.item?.id !== item?.id
+      );
       await updateDoc(movieID, { savedShows: showArray });
     } else {
       alert("LogIn to Save Movies");
@@ -95,15 +99,15 @@ const Movie = ({ item, mediaType }) => {
         </p>
 
         <p
-          className="likeDislike absolute top-4 left-0 rounded-e-[99px] "
+          className="likeDislike absolute top-4 left-0 rounded-e-[99px] cursor-pointer"
           onClick={() =>
-            alreadySaved.some((target) => target.item.id === item.id)
+            alreadySaved?.some((target) => target?.item?.id === item?.id)
               ? removeSavedShows()
               : savedShows()
           }
         >
           <div className="w-fit flex items-center gap-1 p-2 px-4">
-            {alreadySaved.some((target) => target.item.id === item.id) ? (
+            {alreadySaved?.some((target) => target?.item?.id === item?.id) ? (
               <>
                 <p>Remove from Favourite</p>
                 <FaHeart className=" text-red-700" />

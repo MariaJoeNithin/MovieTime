@@ -28,13 +28,13 @@ const Trendingpg = ({ title }) => {
     return () => {};
   }, [fetchNew]);
 
-  const filterMovies = (items) => {
-    return items.filter((item) => item.media_type === "movie");
-  };
+  // const filterMovies = (items) => {
+  //   return items.filter((item) => item.media_type === "movie");
+  // };
 
-  const filterTVShows = (items) => {
-    return items.filter((item) => item.media_type === "tv");
-  };
+  // const filterTVShows = (items) => {
+  //   return items.filter((item) => item.media_type === "tv");
+  // };
 
   return (
     <>

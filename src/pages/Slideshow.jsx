@@ -1,9 +1,61 @@
-import React, { useState } from "react";
+import { arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 // import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
+import { db } from "../config/FireBase";
+import { UserAuth } from "../authRelated/Authcontext";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const Slideshow = ({ item, videoLink }) => {
-  const [showDropdown, setShowDropdown] = useState(false);
+  const { user } = UserAuth();
+  const [alreadySaved, setAlreadySaved] = useState([]);
+  const [like, setLike] = useState(false);
+
+  useEffect(() => {
+    if (user?.email) {
+      const subscriber = onSnapshot(doc(db, "users", user?.email), (data) => {
+        if (data.exists()) {
+          setAlreadySaved(data.data().savedShows);
+        }
+        // console.log(data.data().savedShows);
+      });
+      return () => {
+        subscriber();
+      };
+    }
+  }, [user?.email]);
+
+  let navigate = useNavigate();
+  const movieID = doc(db, "users", `${user?.email}`);
+  const savedShows = async () => {
+    if (user?.email) {
+      setLike(!like);
+      await updateDoc(movieID, {
+        savedShows: arrayUnion({
+          ...item,
+          [item.media_type]: item?.media_type,
+        }),
+      });
+    } else {
+      const Nav = window.confirm("LogIn to Save Movies");
+      if (Nav) {
+        navigate("/login");
+      }
+    }
+  };
+
+  const removeSavedShows = async () => {
+    if (user?.email) {
+      setLike(!like);
+      // setSaved(true);
+      const showArray = alreadySaved.filter((show) => show.item.id !== item.id);
+      await updateDoc(movieID, { savedShows: showArray });
+    } else {
+      alert("LogIn to Save Movies");
+    }
+  };
+
   const trunkTxt = (str, num) => {
     if (str?.length > num) {
       return str.slice(0, num) + "...";
@@ -20,10 +72,6 @@ const Slideshow = ({ item, videoLink }) => {
     } else {
       return "text-yellow-700";
     }
-  };
-
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
   };
 
   return (
@@ -48,12 +96,35 @@ const Slideshow = ({ item, videoLink }) => {
           <div className=" mt-5 flex gap-2">
             <div className=" relative">
               <button className="border text-black bg-gray-300 font-[500] border-gray-300 py-2 px-5 rounded">
-                Play
+                <Link key={item?.id} to={`/Productpg/movie/${item?.id}`}>
+                  Play
+                </Link>
               </button>
             </div>
-            <button className="border text-white font-[500] border-gray-300 py-2 px-5 rounded mx-2">
-              Watch Later
-            </button>
+            <p
+              className="likeDislike border text-white font-[500] border-gray-300 py-2 px-5 rounded "
+              onClick={() =>
+                alreadySaved?.some((target) => target?.item?.id === item?.id)
+                  ? removeSavedShows()
+                  : savedShows()
+              }
+            >
+              <div className="w-fit flex items-center gap-1 cursor-pointer">
+                {alreadySaved?.some(
+                  (target) => target?.item?.id === item?.id
+                ) ? (
+                  <>
+                    <p>Remove From Favourite</p>
+                    <FaHeart className=" text-red-700" />
+                  </>
+                ) : (
+                  <>
+                    <p>Add To Favourite</p>
+                    <FaRegHeart className=" text-gray-300" />
+                  </>
+                )}
+              </div>
+            </p>
           </div>
           <p className="text-gray-400 text-sm mt-2">
             Released: {item?.release_date}

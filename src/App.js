@@ -25,7 +25,7 @@ function App() {
           <Navbar />
           {/* <ResponsiveAppBar /> */}
           <Routes>
-            <Route path="/MovieTime" element={<Home />} />
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/search" element={<Search />} />

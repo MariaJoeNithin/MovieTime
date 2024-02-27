@@ -10,10 +10,11 @@ import { UserAuth } from "../authRelated/Authcontext";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 
-const Singlepagemain = ({ item, videoLink }) => {
+const Singlepagemain = ({ item, mediaType }) => {
   const { user } = UserAuth();
   const [alreadySaved, setAlreadySaved] = useState([]);
   const [like, setLike] = useState(false);
+
 
   useEffect(() => {
     if (user?.email) {
@@ -37,6 +38,7 @@ const Singlepagemain = ({ item, videoLink }) => {
       await updateDoc(movieID, {
         savedShows: arrayUnion({
           item,
+          type: mediaType,
         }),
       });
     } else {
@@ -58,8 +60,6 @@ const Singlepagemain = ({ item, videoLink }) => {
     }
   };
 
-  const [showDropdown, setShowDropdown] = useState(false);
-
   //   const trunkTxt = (str, num) => {
   //     if (str?.length > num) {
   //       return str.slice(0, num) + "...";
@@ -80,10 +80,6 @@ const Singlepagemain = ({ item, videoLink }) => {
     }
   };
 
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-  };
-
   return (
     <div className="w-full h-full relative">
       <p className="absolute text-2xl top-4 z-50 left-0 font-[700] w-fit text-center h-fit p-2 px-4 rounded-full">
@@ -102,7 +98,9 @@ const Singlepagemain = ({ item, videoLink }) => {
           alt={item?.title}
         />
         <div className="absolute w-full top-[20%] p-4 md:p-8 flex flex-col gap-2">
-          <h1 className="text-3xl md:text-5xl font-[500]">{item?.title}</h1>
+          <h1 className="text-3xl md:text-5xl font-[500]">
+            {item?.title ? item?.title : item?.name}
+          </h1>
           <div className=" mt-5 flex gap-2 flex-wrap">
             <div className=" relative">
               <a href="#OfcTrailer">
@@ -114,13 +112,15 @@ const Singlepagemain = ({ item, videoLink }) => {
             <p
               className="likeDislike border text-white font-[500] border-gray-300 py-2 px-5 rounded "
               onClick={() =>
-                alreadySaved.some((target) => target.item.id === item.id)
+                alreadySaved?.some((target) => target?.item?.id === item?.id)
                   ? removeSavedShows()
                   : savedShows()
               }
             >
-              <div className="w-fit flex items-center gap-1 ">
-                {alreadySaved.some((target) => target.item.id === item.id) ? (
+              <div className="w-fit flex items-center gap-1 cursor-pointer">
+                {alreadySaved?.some(
+                  (target) => target?.item?.id === item?.id
+                ) ? (
                   <>
                     <p>Remove From Favourite</p>
                     <FaHeart className=" text-red-700" />

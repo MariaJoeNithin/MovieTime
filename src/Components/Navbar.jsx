@@ -5,7 +5,7 @@ import { UserAuth } from "../authRelated/Authcontext";
 import { BiSearchAlt } from "react-icons/bi";
 import { Avatar, Button, Popover } from "@mui/material";
 import { db } from "../config/FireBase";
-import { arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { IoIosMenu } from "react-icons/io";
 import { FaGripfire } from "react-icons/fa";
 import { FaArrowTrendUp, FaPeopleGroup } from "react-icons/fa6";
@@ -66,7 +66,7 @@ const Navbar = () => {
     <>
       <div className="Nav z-[100] left-0 w-full shadow-lg flex md:gap-5 gap-2 flex-wrap border-none border-b-white bg-black/25  backdrop-blur-lg p-2 items-center justify-between">
         <div className="flex md:justify-start items-center order-2 md:order-1 w-fit">
-          <Link to="/MovieTime">
+          <Link to="/">
             <Logo className=" max-h-10 md:max-w-fit max-w-28 md:max-h-full scale-75 md:scale-100 rounded-xl overflow-hidden" />
           </Link>
           <div className="md:flex hidden w-fit">

@@ -1,15 +1,29 @@
-import React, { useState } from "react";
-// import { UserAuth } from "../authRelated/Authcontext";
+import React, { useEffect, useState } from "react";
+import { UserAuth } from "../authRelated/Authcontext";
 import { db } from "../config/FireBase";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { Avatar } from "@mui/material";
 
-const EditProfile = ({ user, onClose }) => {
+const EditProfile = ({ onClose }) => {
+  const { user, logOut } = UserAuth();
+
   const [username, setUsername] = useState(user?.username || "");
   const [age, setAge] = useState(user?.age || "");
   const [gender, setGender] = useState(user?.gender || "");
   const [profilePicUrl, setProfilePicUrl] = useState(user?.profilePicUrl || "");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (user && user.email) {
+      const unsubscribe = onSnapshot(doc(db, "users", user.email), (doc) => {
+        setUsername(doc.data()?.username);
+        setProfilePicUrl(doc.data()?.profilePicUrl);
+        setAge(doc.data()?.age);
+        setGender(doc.data()?.gender);
+      });
+      return unsubscribe;
+    }
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,19 +45,23 @@ const EditProfile = ({ user, onClose }) => {
   };
 
   return (
-    <div className="bg-black/50 absolute top-0 left-0 h-full w-screen flex justify-center items-center z-[1000] backdrop-blur-lg ">
-      <div className="bg-black/50 z-[2000] backdrop-blur-lg p-6 rounded-lg shadow-md border border-white my-2 max-w-2xl mx-auto ">
+    <div className="bg-black/50 fixed h-screen top-0 left-0 w-screen flex justify-center items-center z-[1000] backdrop-blur-lg ">
+      <div className="bg-black/50 z-[2000] backdrop-blur-3xl p-6 rounded-lg shadow-md border border-white my-2 max-w-2xl mx-auto ">
         <h2 className="text-2xl font-bold mb-4">Edit Profile</h2>
         {error && <p className="text-red-500">{error}</p>}
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-y-4">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 gap-y-4 gap-x-2"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4">
             <div className="col flex flex-col items-center justify-center gap-2">
               <Avatar
                 alt={user?.email ? user?.email : "guest"}
-                className="h-[200px] w-[200px]"
+                // className="h-[200px] w-[200px]"
+                sx={{ width: "200px", height: "200px" }}
                 src={
-                  user?.profilePicUrl
-                    ? user?.profilePicUrl
+                  profilePicUrl
+                    ? profilePicUrl
                     : "https://banner2.cleanpng.com/20190730/shy/kisspng-photographic-film-movie-camera-cinema-website-and-mobile-application-development-service-5d3fc924ce3b33.8538265315644613488447.jpg"
                 }
               />

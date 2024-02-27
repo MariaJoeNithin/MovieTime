@@ -8,7 +8,7 @@ import { UserAuth } from "../authRelated/Authcontext";
 import { FaTrash } from "react-icons/fa6";
 import { db } from "../config/FireBase";
 import { doc, updateDoc, onSnapshot } from "firebase/firestore";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 const Savedshows = () => {
   const { user } = UserAuth();
@@ -24,9 +24,13 @@ const Savedshows = () => {
   };
 
   useEffect(() => {
-    onSnapshot(doc(db, "users", `${user?.email}`), (doc) => {
-      setMovies(doc.data()?.savedShows);
-    });
+    try {
+      onSnapshot(doc(db, "users", `${user?.email}`), (doc) => {
+        setMovies(doc.data()?.savedShows);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }, [user?.email]);
   // console.log(user?.email);
 
@@ -74,9 +78,12 @@ const Savedshows = () => {
             id={"slider"}
             className="flex flex-row w-full mx-4 h-full overflow-x-scroll scroll-smooth scrollbar-hide"
           >
-            {movies.map((dt, id) => (
+            {movies?.map((dt, id) => (
               <>
-                <div className="product_items col rounded-lg shadow min-w-[230px] md:min-w-[240px] max-w-[300px] inline-block relative p-2 overflow-hidden">
+                <div
+                  key={id}
+                  className="product_items col rounded-lg shadow min-w-[230px] md:min-w-[240px] max-w-[300px] inline-block relative p-2 overflow-hidden"
+                >
                   <p class="movieimage pb-3 w-full h-[350px] overflow-hidden rounded-lg">
                     <img
                       className="w-full movieimg h-full block rounded-lg transition-all duration-200"
@@ -89,7 +96,7 @@ const Savedshows = () => {
                   <p className="likeDislike absolute top-4 left-0 rounded-e-[99px] ">
                     <div className="w-fit flex items-center gap-1 p-2 px-4">
                       <p
-                        className=" font-[500] w-fit flex items-center gap-1 p-2 px-4"
+                        className=" font-[500] w-fit flex items-center gap-1 p-2 px-4 cursor-pointer"
                         onClick={() => deleteShow(dt?.item?.id)}
                       >
                         <p> Remove From List</p>
@@ -99,7 +106,7 @@ const Savedshows = () => {
                   </p>
                   <div className="product_details grid grid-cols-6 w-full p-2">
                     <p className="col-span-4 rounded p-1 text-xl">
-                      {dt?.item?.title}
+                      {dt?.item?.title ? dt?.item?.title : dt?.item?.name}
                     </p>
                     <div className="col-span-2 text-right">
                       <p
@@ -113,17 +120,17 @@ const Savedshows = () => {
                     </div>
                   </div>
 
-                  <Link
+                  {/* <Link
                     key={dt?.item?.id}
                     to={`/Productpg/${dt?.item?.media_type}/${dt?.item?.id}`}
-                  >
-                    <div class="product_overview w-full gap-y-2 rounded-t-3xl p-2">
-                      <h3 class="mvOvHeading rounded-full p-3 text-xl font-[900] text-center">
-                        Movie Overview
-                      </h3>
-                      <p>{truncateText(dt?.item?.overview, 150)}</p>
-                    </div>
-                  </Link>
+                  > */}
+                  <div class="product_overview w-full gap-y-2 rounded-t-3xl p-2">
+                    <h3 class="mvOvHeading rounded-full p-3 text-xl font-[900] text-center">
+                      Movie Overview
+                    </h3>
+                    <p>{truncateText(dt?.item?.overview, 150)}</p>
+                  </div>
+                  {/* </Link> */}
                 </div>
               </>
             ))}
