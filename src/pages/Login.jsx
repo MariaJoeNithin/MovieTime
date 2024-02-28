@@ -63,11 +63,15 @@ const Login = () => {
                 >
                   Log In
                 </button>
-                <div className="flex justify-between">
-                  <p>
-                    <input type="checkbox" name="RememberMe" />
-                    Remember Me !
+                <div className="flex justify-between mb-8">
+                  <p className="relative group border border-white rounded p-2  transition-all duration-150">
+                    Sample
+                    <p className=" hidden group-hover:flex invisible group-hover:visible absolute top-10 bg-black/50 backdrop-blur-lg rounded-2xl p-5 w-56 transition-all duration-150">
+                      Email&nbsp;&nbsp;:&nbsp;&nbsp;j@mailsample.com <br />
+                      Password&nbsp;&nbsp;:&nbsp;&nbsp;123456
+                    </p>
                   </p>
+
                   <p>Need Help?</p>
                 </div>
                 <div className="flex">

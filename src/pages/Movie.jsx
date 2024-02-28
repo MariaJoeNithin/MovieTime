@@ -89,7 +89,7 @@ const Movie = ({ item, mediaType }) => {
         key={item?.id}
         className="product_items col rounded-lg shadow min-w-[230px] md:min-w-[240px] max-w-[300px] inline-block relative p-2 overflow-hidden"
       >
-        <p class="movieimage pb-3 w-full h-[350px] overflow-hidden rounded-lg">
+        <p className="movieimage pb-3 w-full h-[350px] overflow-hidden rounded-lg">
           <img
             className="w-full movieimg h-full block rounded-lg transition-all duration-200"
             src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}
@@ -134,8 +134,8 @@ const Movie = ({ item, mediaType }) => {
           </div>
         </div>
         <Link key={item?.id} to={`/Productpg/${mediaType}/${item?.id}`}>
-          <div class="product_overview w-full gap-y-2 rounded-t-3xl p-2">
-            <h3 class="mvOvHeading rounded-full p-3 text-xl font-[900] text-center">
+          <div className="product_overview w-full gap-y-2 rounded-t-3xl p-2">
+            <h3 className="mvOvHeading rounded-full p-3 text-xl font-[900] text-center">
               Movie Overview
             </h3>
             <p>{truncateText(item?.overview, 150)}</p>

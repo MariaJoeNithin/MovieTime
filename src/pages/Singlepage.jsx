@@ -328,9 +328,10 @@ const Singlepage = () => {
                     >
                       <img
                         src={
-                          image[index]?.file_path
+                          image &&
+                          (image[index]?.file_path
                             ? img_org + image[index]?.file_path
-                            : unavailableLandscape
+                            : unavailableLandscape)
                         }
                         className="h-full w-full object-cover object-center"
                         alt=""

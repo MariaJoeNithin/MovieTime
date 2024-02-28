@@ -36,7 +36,7 @@ const Popularpg = () => {
 
   return (
     <>
-      <div>
+      <div className=" mb-32">
         <h2 className="text-white font-bold md:text-xl p-4 mt-2 text-lg">
           Popular {mvorser === "movie" ? "Movies" : "TV"}
         </h2>

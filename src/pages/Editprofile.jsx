@@ -3,6 +3,7 @@ import { UserAuth } from "../authRelated/Authcontext";
 import { db } from "../config/FireBase";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { Avatar } from "@mui/material";
+import { updatePassword } from "firebase/auth";
 
 const EditProfile = ({ onClose }) => {
   const { user, logOut } = UserAuth();
@@ -45,8 +46,8 @@ const EditProfile = ({ onClose }) => {
   };
 
   return (
-    <div className="bg-black/50 fixed h-screen top-0 left-0 w-screen flex justify-center items-center z-[1000] backdrop-blur-lg ">
-      <div className="bg-black/50 z-[2000] backdrop-blur-3xl p-6 rounded-lg shadow-md border border-white my-2 max-w-2xl mx-auto ">
+    <div className="bg-black/50 fixed h-full top-0 left-0 w-screen flex justify-center z-[1000] backdrop-blur-lg">
+      <div className="bg-black/50 z-[2000] backdrop-blur-3xl p-6 rounded-lg shadow-md border border-white my-2 max-w-2xl mx-auto h-fit mt-36 ">
         <h2 className="text-2xl font-bold mb-4">Edit Profile</h2>
         {error && <p className="text-red-500">{error}</p>}
         <form

@@ -5,18 +5,26 @@ import { UserAuth } from "../authRelated/Authcontext";
 import { db } from "../config/FireBase";
 import { doc, onSnapshot } from "firebase/firestore";
 import EditProfile from "./Editprofile";
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
+} from "firebase/auth";
+import ChangePassword from "./Changepassword";
 
 const Account = () => {
   const { user, logOut } = UserAuth();
 
   const navigate = useNavigate();
-  console.log(user && user);
+  // console.log(user && user);
   const [userName, setUserName] = useState("");
   const [proPic, setPropic] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false); // Add state for showing/hiding Change Password component
 
   const [profileData, setProfileData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
 
   const handleLogout = async () => {
     try {
@@ -27,17 +35,26 @@ const Account = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (user && user.email) {
-  //     const unsubscribe = onSnapshot(doc(db, "users", user.email), (doc) => {
-  //       setUserName(doc.data()?.username);
-  //       setProfilePic(doc.data()?.profilePicUrl);
-  //       setAge(doc.data()?.age);
-  //       setGender(doc.data()?.gender);
-  //     });
-  //     return unsubscribe;
-  //   }
-  // }, [user]);
+  const handleChangePassword = async (currentPassword, newPassword) => {
+    try {
+      const authUser = user;
+
+      // Reauthenticate the user with their current password
+      const credentials = EmailAuthProvider.credential(
+        authUser.email,
+        currentPassword
+      );
+      await reauthenticateWithCredential(authUser, credentials);
+
+      // If reauthentication is successful, update the password
+      await updatePassword(authUser, newPassword);
+      setNewPassword("");
+      setShowChangePassword(false); // Close the Change Password component after successful update
+    } catch (error) {
+      // Handle reauthentication or password update errors
+      console.error("Error changing password:", error.code, error.message);
+    }
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -76,6 +93,7 @@ const Account = () => {
 
   const handleCloseEditProfile = () => {
     setIsEditing(false);
+    setShowChangePassword(false); // Close Change Password component when closing Edit Profile component
   };
 
   return (
@@ -83,7 +101,8 @@ const Account = () => {
       <div className={`p-2 relative ${isEditing ? " overflow-hidden" : ""} `}>
         {isLoading && <p>Loading...</p>}
         {isEditing && <EditProfile onClose={handleCloseEditProfile} />}
-        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-black dark:border-gray-700 flex flex-col md:flex-row  justify-center items-center p-2 mx-auto gap-5 md:min-w-[550px] md:min-h-[350px]">
+
+        <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-black dark:border-gray-700 flex flex-col md:flex-row  justify-center items-center p-2 mx-auto gap-5 md:min-w-[550px] md:min-h-[350px]">
           <div className="profilepic flex flex-col gap-2">
             <h1 className="text-xl flex">
               Welcome , {user?.email ? userName : "Guest"}
@@ -114,12 +133,26 @@ const Account = () => {
               >
                 Log Out
               </button>
+              <button
+                onClick={() => setShowChangePassword(true)}
+                className="bg-gray-600 py-2 text-white font-bold rounded flex justify-center items-center"
+              >
+                Change Password
+              </button>
             </div>
           </div>
         </div>
 
         <Savedshows />
       </div>
+
+      {/* Render the Change Password component conditionally */}
+      {showChangePassword && (
+        <ChangePassword
+          onClose={() => setShowChangePassword(false)}
+          onUpdatePassword={handleChangePassword}
+        />
+      )}
     </>
   );
 };

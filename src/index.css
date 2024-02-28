@@ -43,7 +43,7 @@ body {
 
   min-height: 100vh;
   max-width: 100vw;
-  /* position: relative; */
+  position: relative;
   overflow-x: hidden;
   background-color: #bd10e0;
   color: white;
@@ -81,4 +81,11 @@ code {
 
 .activeBtn .atvBtn {
   transform: translateX(100%);
+}
+
+.FooterIcon img {
+  transition: 0.25s;
+}
+.FooterIcon img:hover {
+  filter: drop-shadow(0 0 0.75rem crimson);
 }

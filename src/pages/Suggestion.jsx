@@ -19,7 +19,7 @@ const Suggestion = ({ cntId, title, fetchURL }) => {
       });
   }, [fetchURL]);
 
-  console.log(movies.media_type);
+  // console.log(movies.media_type);
 
   const slideLeft = () => {
     let slider = document.querySelector("#slider" + cntId);

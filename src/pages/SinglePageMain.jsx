@@ -1,6 +1,6 @@
 // import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Await, Link, useNavigate } from "react-router-dom";
 // import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
 import { db } from "../config/FireBase";
@@ -9,12 +9,19 @@ import { UserAuth } from "../authRelated/Authcontext";
 
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
+import { unavailableLandscape } from "./ImageSearch";
 
 const Singlepagemain = ({ item, mediaType }) => {
   const { user } = UserAuth();
   const [alreadySaved, setAlreadySaved] = useState([]);
   const [like, setLike] = useState(false);
+  const [imgUrl, setImgurl] = useState(null);
 
+  useEffect(() => {
+    if (item && item.backdrop_path) {
+      setImgurl(item.backdrop_path);
+    }
+  }, [item]);
 
   useEffect(() => {
     if (user?.email) {
@@ -29,6 +36,8 @@ const Singlepagemain = ({ item, mediaType }) => {
       };
     }
   }, [user?.email]);
+
+  console.log(item?.backdrop_path);
 
   let navigate = useNavigate();
   const movieID = doc(db, "users", `${user?.email}`);
@@ -94,7 +103,12 @@ const Singlepagemain = ({ item, mediaType }) => {
       <div className="w-full h-[550px] ">
         <img
           className="w-full h-full object-cover object-top "
-          src={`https://image.tmdb.org/t/p/original/${item?.backdrop_path}`}
+          src={
+            imgUrl &&
+            (imgUrl
+              ? `https://image.tmdb.org/t/p/original/${imgUrl}`
+              : unavailableLandscape)
+          }
           alt={item?.title}
         />
         <div className="absolute w-full top-[20%] p-4 md:p-8 flex flex-col gap-2">

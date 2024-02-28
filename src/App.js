@@ -14,6 +14,7 @@ import Popularpg from "./pages/Popularpg";
 import Topratedpg from "./pages/Topratedpg";
 import Search from "./pages/Search";
 import Singlepage from "./pages/Singlepage";
+import Footer from "./Components/Footer";
 // import Slider from "./pages/Slideshow";
 // import ResponsiveAppBar from "./Components/MuiNav";
 
@@ -54,6 +55,7 @@ function App() {
 
             <Route path="*" element={<ErrorPage />} />
           </Routes>
+          <Footer />
         </AuthContextProvider>
       </Router>
     </>
