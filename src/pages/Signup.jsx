@@ -31,6 +31,7 @@ const Signup = () => {
     }
     try {
       await signUp(email, password, username, profilePicUrl, age, gender);
+
       navigate("/");
     } catch (error) {
       setError(error.message);

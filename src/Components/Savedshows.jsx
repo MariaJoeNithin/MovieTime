@@ -119,17 +119,17 @@ const Savedshows = () => {
                   </div>
                 </div>
 
-                {/* <Link
-                    key={dt?.item?.id}
-                    to={`/Productpg/${dt?.item?.media_type}/${dt?.item?.id}`}
-                  > */}
-                <div className="product_overview w-full gap-y-2 rounded-t-3xl p-2">
-                  <h3 className="mvOvHeading rounded-full p-3 text-xl font-[900] text-center">
-                    Movie Overview
-                  </h3>
-                  <p>{truncateText(dt?.item?.overview, 150)}</p>
-                </div>
-                {/* </Link> */}
+                <Link
+                  key={dt?.item?.id}
+                  to={`/Productpg/${dt?.item?.media_type}/${dt?.item?.id}`}
+                >
+                  <div className="product_overview w-full gap-y-2 rounded-t-3xl p-2">
+                    <h3 className="mvOvHeading rounded-full p-3 text-xl font-[900] text-center">
+                      Movie Overview
+                    </h3>
+                    <p>{truncateText(dt?.item?.overview, 150)}</p>
+                  </div>
+                </Link>
               </div>
             ))}
           </div>
