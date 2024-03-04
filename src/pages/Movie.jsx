@@ -27,7 +27,10 @@ const Movie = ({ item, mediaType }) => {
       // setSaved(true);
       await updateDoc(movieID, {
         savedShows: arrayUnion({
-          item,
+          item: {
+            ...item,
+            mediaType: mediaType,
+          },
         }),
       });
     } else {

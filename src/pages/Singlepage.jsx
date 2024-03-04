@@ -152,7 +152,7 @@ const Singlepage = () => {
   return (
     <>
       <div className="py-0">
-        <Singlepagemain item={Movie} videoLink={videoLink} />
+        <Singlepagemain item={Movie} videoLink={videoLink} mediaType={MediaType} />
 
         <section className=" p-5 my-5 flex flex-col gap-2 md:grid md:grid-cols-2 items-center">
           <div className="relative bg-black/50 backdrop-blur-2xl p-3 py-5 flex flex-col gap-2 border rounded-xl">

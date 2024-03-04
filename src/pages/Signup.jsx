@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../authRelated/Authcontext";
+import { FcAddImage } from "react-icons/fc";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -13,8 +14,19 @@ const Signup = () => {
   const [gender, setGender] = useState("");
   const [error, setError] = useState("");
   const emailInputRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
-  const { signUp } = UserAuth();
+  const { signUp, gglsignIn } = UserAuth();
+
+  const handleGglsignIn = async (e) => {
+    try {
+      e.preventDefault();
+      await gglsignIn();
+      navigate("/");
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,9 +50,16 @@ const Signup = () => {
     }
   };
 
-  const handleProfilePicUrlChange = (e) => {
-    const url = e.target.value;
-    setProfilePicUrl(url);
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setProfilePicUrl(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setSelectedFile(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -74,13 +93,26 @@ const Signup = () => {
                   placeholder="Username"
                   onChange={(e) => setUsername(e.target.value)}
                 />
-                <input
-                  className=" bg-transparent border rounded-full p-2 px-4 text-lg inputShadow border-none bg-gray-700 outline-none  "
-                  type="url"
-                  label="Profile Picture URL"
-                  placeholder="Profile Picture URL"
-                  onChange={handleProfilePicUrlChange}
-                />
+                <div className="">
+                  <label htmlFor="profilePic" className="cursor-pointer">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id="profilePic"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                    {profilePicUrl ? (
+                      <img
+                        src={selectedFile}
+                        alt="Selected"
+                        className="w-32 h-32 object-cover object-center rounded-full shadow-lg"
+                      />
+                    ) : (
+                      <FcAddImage className="text-5xl" />
+                    )}
+                  </label>
+                </div>
                 <input
                   className=" bg-transparent border rounded-full p-2 px-4 text-lg inputShadow border-none bg-gray-700 outline-none  "
                   type="number"
@@ -130,6 +162,14 @@ const Signup = () => {
                 >
                   Sign Up
                 </button>
+                <button
+                  className="bg-red-700 transition-all duration-200 text-white font-bold py-2 px-4 rounded hover:rounded-full focus:outline-none focus:shadow-outline"
+                  onClick={handleGglsignIn}
+                  type="submit"
+                >
+                  Sign Up With Google
+                </button>
+
                 <div className="flex justify-between">
                   <p>
                     <input type="checkbox" name="RememberMe" />

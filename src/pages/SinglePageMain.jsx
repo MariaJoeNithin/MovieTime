@@ -46,8 +46,10 @@ const Singlepagemain = ({ item, mediaType }) => {
       setLike(!like);
       await updateDoc(movieID, {
         savedShows: arrayUnion({
-          item,
-          type: mediaType,
+          item: {
+            ...item,
+            mediaType: mediaType,
+          },
         }),
       });
     } else {
@@ -59,7 +61,7 @@ const Singlepagemain = ({ item, mediaType }) => {
   };
 
   const removeSavedShows = async () => {
-    if (user?.email) {
+    if (user?.email && item?.id) {
       setLike(!like);
       // setSaved(true);
       const showArray = alreadySaved.filter((show) => show.item.id !== item.id);

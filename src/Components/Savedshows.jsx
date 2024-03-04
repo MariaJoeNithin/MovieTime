@@ -122,7 +122,9 @@ const Savedshows = () => {
 
                 <Link
                   key={dt?.item?.id}
-                  to={`/Productpg/${dt?.item?.media_type}/${dt?.item?.id}`}
+                  to={`/Productpg/${
+                    dt?.item?.media_type || dt?.item?.mediaType
+                  }/${dt?.item?.id}`}
                 >
                   <div className="product_overview w-full gap-y-2 rounded-t-3xl p-2">
                     <h3 className="mvOvHeading rounded-full p-3 text-xl font-[900] text-center">

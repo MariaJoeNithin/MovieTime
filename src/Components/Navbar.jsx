@@ -13,7 +13,7 @@ import { GiCometSpark } from "react-icons/gi";
 
 const Navbar = () => {
   const { user, logOut } = UserAuth();
-
+  // console.log(user && user);
   const navigate = useNavigate();
   const [profilePic, setProfilePic] = useState(null);
   const [userName, setUserName] = useState(null);
@@ -194,12 +194,12 @@ const Navbar = () => {
             alt={user?.email ? user?.email : "guest"}
             src={
               user?.email
-                ? profilePic
+                ? user?.photoURL
                 : "https://banner2.cleanpng.com/20190730/shy/kisspng-photographic-film-movie-camera-cinema-website-and-mobile-application-development-service-5d3fc924ce3b33.8538265315644613488447.jpg"
             }
           />
           <h1 className="text-xl md:flex hidden">
-            Welcome , {user?.email ? userName : "Guest"}
+            Welcome , {user?.displayName ? user?.displayName : "Guest"}
           </h1>
         </div>
 

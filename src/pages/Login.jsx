@@ -10,7 +10,16 @@ const Login = () => {
   const [error, setError] = useState("");
   const emailInputRef = useRef(null);
 
-  const { logIn } = UserAuth();
+  const { logIn, googlelogIn } = UserAuth();
+
+  const handleSignwithggl = async () => {
+    try {
+      await googlelogIn();
+      navigate("/");
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,6 +56,7 @@ const Login = () => {
                   type="email"
                   label="Email"
                   placeholder="Email"
+                  value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <input
@@ -54,8 +64,10 @@ const Login = () => {
                   type="password"
                   label="Password"
                   placeholder="Password"
+                  value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+
                 <button
                   className="bg-red-700 transition-all duration-200 text-white font-bold py-2 px-4 rounded hover:rounded-full focus:outline-none focus:shadow-outline"
                   type="submit"
@@ -63,9 +75,24 @@ const Login = () => {
                 >
                   Log In
                 </button>
+
+                <button
+                  className="bg-red-700 transition-all duration-200 text-white font-bold py-2 px-4 rounded hover:rounded-full focus:outline-none focus:shadow-outline"
+                  type="button"
+                  onClick={handleSignwithggl} // Call handleSignwithggl when the button is clicked
+                >
+                  Log In With Google
+                </button>
+
                 <div className="flex justify-between mb-8">
-                  <p className="relative group border border-white rounded p-2  transition-all duration-150">
-                    Sample
+                  <p
+                    className="relative group border border-white rounded p-2  transition-all duration-150"
+                    // onClick={
+                    //   (() => setEmail("j@mailsample.com"),
+                    //   setPassword("123456"))
+                    // }
+                  >
+                    SampleCredentials
                     <p className=" hidden group-hover:flex invisible group-hover:visible absolute top-10 bg-black/50 backdrop-blur-lg rounded-2xl p-5 w-56 transition-all duration-150">
                       Email&nbsp;&nbsp;:&nbsp;&nbsp;j@mailsample.com <br />
                       Password&nbsp;&nbsp;:&nbsp;&nbsp;123456

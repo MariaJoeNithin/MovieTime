@@ -1,30 +1,68 @@
 import React, { useEffect, useState } from "react";
 import { UserAuth } from "../authRelated/Authcontext";
-import { db } from "../config/FireBase";
-import { doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { db, storage } from "../config/FireBase"; // Import storage
+import { doc, onSnapshot, updateDoc, arrayUnion } from "firebase/firestore";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"; // Import storage functions
 import { Avatar } from "@mui/material";
-import { updatePassword } from "firebase/auth";
+import { v4 as uuid } from "uuid";
+import { updateProfile } from "firebase/auth";
 
 const EditProfile = ({ onClose }) => {
-  const { user, logOut } = UserAuth();
+  const { user } = UserAuth();
 
   const [username, setUsername] = useState(user?.username || "");
   const [age, setAge] = useState(user?.age || "");
   const [gender, setGender] = useState(user?.gender || "");
-  const [profilePicUrl, setProfilePicUrl] = useState(user?.profilePicUrl || "");
+  const [profilePicFile, setProfilePicFile] = useState(null);
+  const [profilePicUrl, setProfilePicUrl] = useState(null);
   const [error, setError] = useState("");
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  console.log(user);
 
   useEffect(() => {
     if (user && user.email) {
       const unsubscribe = onSnapshot(doc(db, "users", user.email), (doc) => {
         setUsername(doc.data()?.username);
-        setProfilePicUrl(doc.data()?.profilePicUrl);
         setAge(doc.data()?.age);
         setGender(doc.data()?.gender);
       });
       return unsubscribe;
     }
   }, [user]);
+
+  const handleProfilePicUpload = async (file) => {
+    const storageRef = ref(storage, uuid());
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    const fileType = file.type.split("/")[0];
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setUploadProgress(progress);
+      },
+      (error) => {
+        console.error(error);
+        setError("Error uploading profile picture");
+      },
+      async () => {
+        try {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          await updateDoc(doc(db, "users", user?.email), {
+            profilePicUrl: downloadURL,
+          });
+        } catch (error) {
+          console.error(error);
+          setError("Error updating profile picture URL");
+        } finally {
+          setUploadProgress(0);
+        }
+      }
+    );
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,15 +71,22 @@ const EditProfile = ({ onClose }) => {
         username: username || user?.username,
         age: age || user?.age,
         gender: gender || user?.gender,
-        profilePicUrl: profilePicUrl || user?.profilePicUrl,
+        profilePicUrl: profilePicUrl || user?.photoURL,
       };
 
-      await updateDoc(doc(db, "users", user?.email), {
-        ...userData,
+      if (profilePicFile) {
+        await handleProfilePicUpload(profilePicFile);
+      }
+
+      await updateDoc(doc(db, "users", user?.email), userData);
+      await updateProfile(user, {
+        displayName: username,
+        photoURL: profilePicUrl,
       });
       onClose();
     } catch (error) {
-      setError(error.message);
+      console.error(error);
+      setError("Error updating profile");
     }
   };
 
@@ -56,24 +101,29 @@ const EditProfile = ({ onClose }) => {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4">
             <div className="col flex flex-col items-center justify-center gap-2">
-              <Avatar
-                alt={user?.email ? user?.email : "guest"}
-                // className="h-[200px] w-[200px]"
-                sx={{ width: "200px", height: "200px" }}
-                src={
-                  profilePicUrl
-                    ? profilePicUrl
-                    : "https://banner2.cleanpng.com/20190730/shy/kisspng-photographic-film-movie-camera-cinema-website-and-mobile-application-development-service-5d3fc924ce3b33.8538265315644613488447.jpg"
-                }
-              />
-              <div>
-                <input
-                  type="url"
-                  placeholder="Profile Picture URL"
-                  value={profilePicUrl}
-                  onChange={(e) => setProfilePicUrl(e.target.value)}
-                  className="bg-transparent border rounded-full p-2 px-4 text-lg inputShadow border-none bg-gray-700 outline-none"
-                />
+              <div className="flex flex-col items-center justify-center gap-2">
+                <label
+                  htmlFor="profilePic"
+                  className="flex flex-col items-center justify-center text-center cursor-pointer gap-2"
+                >
+                  Click To change Image
+                  <Avatar
+                    alt={user?.email ? user?.email : "guest"}
+                    sx={{ width: "200px", height: "200px" }}
+                    src={
+                      profilePicFile
+                        ? URL.createObjectURL(profilePicFile)
+                        : user?.photoURL ||
+                          "https://banner2.cleanpng.com/20190730/shy/kisspng-photographic-film-movie-camera-cinema-website-and-mobile-application-development-service-5d3fc924ce3b33.8538265315644613488447.jpg"
+                    }
+                  />
+                  <input
+                    type="file"
+                    id="profilePic"
+                    onChange={(e) => setProfilePicFile(e.target.files[0])}
+                    className="bg-transparent hidden border rounded-full p-2 px-4 text-lg inputShadow border-none bg-gray-700 outline-none"
+                  />
+                </label>
               </div>
             </div>
             <div className="col flex flex-col gap-y-4">
