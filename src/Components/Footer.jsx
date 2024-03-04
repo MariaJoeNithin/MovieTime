@@ -52,31 +52,52 @@ const Footer = () => {
           </div>
 
           <div className="flex justify-center items-center space-x-5 FooterIcon ">
-            <Link to="/" rel="noopener noreferrer">
+            <Link
+              to="/"
+              onClick={() => window.scroll(0, 0)}
+              rel="noopener noreferrer"
+            >
               <img
                 src="https://img.icons8.com/fluent/30/000000/facebook-new.png"
                 alt="Facebook"
               />
             </Link>
-            <Link to="/" rel="noopener noreferrer">
+
+            <Link
+              to="/"
+              onClick={() => window.scroll(0, 0)}
+              rel="noopener noreferrer"
+            >
               <img
                 src="https://img.icons8.com/fluent/30/000000/linkedin-2.png"
                 alt="LinkedIn"
               />
             </Link>
-            <Link to="/" rel="noopener noreferrer">
+            <Link
+              to="/"
+              onClick={() => window.scroll(0, 0)}
+              rel="noopener noreferrer"
+            >
               <img
                 src="https://img.icons8.com/fluent/30/000000/instagram-new.png"
                 alt="Instagram"
               />
             </Link>
-            <Link to="/" rel="noopener noreferrer">
+            <Link
+              to="/"
+              onClick={() => window.scroll(0, 0)}
+              rel="noopener noreferrer"
+            >
               <img
                 src="https://img.icons8.com/fluent/30/000000/facebook-messenger--v2.png"
                 alt="Messenger"
               />
             </Link>
-            <Link to="/" rel="noopener noreferrer">
+            <Link
+              to="/"
+              onClick={() => window.scroll(0, 0)}
+              rel="noopener noreferrer"
+            >
               <img
                 src="https://img.icons8.com/fluent/30/000000/twitter.png"
                 alt="Twitter"
