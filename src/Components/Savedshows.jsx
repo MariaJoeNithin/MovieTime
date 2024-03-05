@@ -64,6 +64,8 @@ const Savedshows = () => {
     return text.substring(0, maxLength).trim() + "...";
   };
 
+  // console.log(movies);
+
   return (
     <>
       <div>
@@ -87,7 +89,7 @@ const Savedshows = () => {
                 <p className="movieimage pb-3 w-full h-[350px] overflow-hidden rounded-lg">
                   <img
                     className="w-full movieimg h-full block rounded-lg transition-all duration-200"
-                    src={`https://image.tmdb.org/t/p/original/${dt?.item?.backdrop_path}`}
+                    src={`https://image.tmdb.org/t/p/original/${dt?.item?.poster_path}`}
                     alt={dt?.item?.title}
                     title={dt?.item?.title}
                   />

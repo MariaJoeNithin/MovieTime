@@ -149,11 +149,12 @@ const EditProfile = ({ onClose }) => {
                 <select
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
-                  className="bg-transparent border rounded-full p-2 px-4 text-lg inputShadow border-none bg-gray-700 outline-none"
+                  className="bg-transparent border rounded-full p-2 px-4 text-lg inputShadow border-none text-black bg-gray-700 outline-none"
                 >
                   <option value="">Select Gender</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
+                  <option value="other">Other</option>
                 </select>
               </div>
             </div>
