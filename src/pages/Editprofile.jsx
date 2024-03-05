@@ -32,36 +32,43 @@ const EditProfile = ({ onClose }) => {
   }, [user]);
 
   const handleProfilePicUpload = async (file) => {
-    const storageRef = ref(storage, uuid());
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    const fileType = file.type.split("/")[0];
+    try {
+      const storageRef = ref(storage, uuid());
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      const fileType = file.type.split("/")[0];
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        );
-        setUploadProgress(progress);
-      },
-      (error) => {
-        console.error(error);
-        setError("Error uploading profile picture");
-      },
-      async () => {
-        try {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          await updateDoc(doc(db, "users", user?.email), {
-            profilePicUrl: downloadURL,
-          });
-        } catch (error) {
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          setUploadProgress(progress);
+        },
+        (error) => {
           console.error(error);
-          setError("Error updating profile picture URL");
-        } finally {
-          setUploadProgress(0);
+          setError("Error uploading profile picture");
+        },
+        async () => {
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            // Update Firestore document with the profile picture URL
+            await updateDoc(doc(db, "users", user?.email), {
+              profilePicUrl: downloadURL,
+            });
+            return downloadURL; // Return the download URL for further use
+          } catch (error) {
+            console.error(error);
+            setError("Error updating profile picture URL");
+          } finally {
+            setUploadProgress(0);
+          }
         }
-      }
-    );
+      );
+    } catch (error) {
+      console.error(error);
+      setError("Error handling profile picture upload");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -75,14 +82,22 @@ const EditProfile = ({ onClose }) => {
       };
 
       if (profilePicFile) {
-        await handleProfilePicUpload(profilePicFile);
+        // Upload the profile picture and get the download URL
+        const downloadURL = await handleProfilePicUpload(profilePicFile);
+        // Update the userData with the new profile picture URL
+        userData.profilePicUrl = downloadURL;
       }
 
+      // Update Firestore document with user data
       await updateDoc(doc(db, "users", user?.email), userData);
+
+      // Update user's profile in Firebase Authentication
       await updateProfile(user, {
-        displayName: username,
-        photoURL: profilePicUrl,
+        displayName: userData.username,
+        photoURL: userData.profilePicUrl,
       });
+
+      console.log("Profile updated successfully");
       onClose();
     } catch (error) {
       console.error(error);
