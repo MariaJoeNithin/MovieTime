@@ -5,6 +5,7 @@ import { FaHeart } from "react-icons/fa";
 import { UserAuth } from "../authRelated/Authcontext";
 import { db } from "../config/FireBase";
 import { arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { MdBookmarkAdded } from "react-icons/md";
 
 import "./movieUi.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -100,6 +101,16 @@ const Movie = ({ item, mediaType }) => {
             title={item?.title ? item?.title : item?.name}
           />
         </p>
+        <div className="w-fit absolute top-3 right-3 flex items-center gap-1 p-2 px-4">
+          {alreadySaved?.some((target) => target?.item?.id === item?.id) ? (
+            <div className="rounded-full p-3 backdrop-blur-lg bg-black/50 shadow">
+              {/* <FaHeart className=" text-red-700" /> */}
+              <MdBookmarkAdded className=" text-white text-xl" />
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
 
         <p
           className="likeDislike absolute top-4 left-0 rounded-e-[99px] cursor-pointer"

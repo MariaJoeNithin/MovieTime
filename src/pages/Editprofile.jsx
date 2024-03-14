@@ -31,80 +31,6 @@ const EditProfile = ({ onClose }) => {
     }
   }, [user]);
 
-  // const handleProfilePicUpload = async (file) => {
-  //   try {
-  //     const storageRef = ref(storage, uuid());
-  //     const uploadTask = uploadBytesResumable(storageRef, file);
-
-  //     uploadTask.on(
-  //       "state_changed",
-  //       (snapshot) => {
-  //         const progress = Math.round(
-  //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-  //         );
-  //         setUploadProgress(progress);
-  //       },
-  //       (error) => {
-  //         console.error(error);
-  //         setError("Error uploading profile picture");
-  //       },
-  //       async () => {
-  //         try {
-  //           // Ensure the upload is completed before getting the download URL
-  //           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-  //           console.log("Download URL:", downloadURL);
-  //           // Update Firestore document with the download URL
-  //           await updateDoc(doc(db, "users", user?.email), {
-  //             profilePicUrl: downloadURL && downloadURL,
-  //           });
-  //           // Update the local state with the download URL
-  //           setProfilePicUrl(downloadURL && downloadURL);
-  //           return downloadURL && downloadURL;
-  //         } catch (error) {
-  //           console.error(error);
-  //           setError("Error updating profile picture URL");
-  //         } finally {
-  //           setUploadProgress(0);
-  //         }
-  //       }
-  //     );
-  //   } catch (error) {
-  //     console.error(error);
-  //     setError("Error handling profile picture upload");
-  //   }
-  // };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const userData = {
-  //       username: username || user?.username,
-  //       age: age || user?.age,
-  //       gender: gender || user?.gender,
-  //       profilePicUrl: profilePicUrl || user?.photoURL,
-  //     };
-
-  //     if (profilePicFile) {
-  //       const downloadURL = await handleProfilePicUpload(profilePicFile);
-  //       console.log("Pro : ", downloadURL && downloadURL);
-  //     }
-
-  //     await updateDoc(doc(db, "users", user?.email), userData);
-  //     console.log("Profile half successfully");
-  //     console.log(profilePicUrl && profilePicUrl);
-
-  //     await updateProfile(user, {
-  //       displayName: userData?.username,
-  //       photoURL: profilePicUrl && profilePicUrl,
-  //     });
-
-  //     console.log("Profile updated successfully");
-  //     onClose();
-  //   } catch (error) {
-  //     console.error(error);
-  //     setError("Error updating profile");
-  //   }
-  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -138,8 +64,8 @@ const EditProfile = ({ onClose }) => {
                   uploadTask.snapshot.ref
                 );
                 // console.log("Download URL:", downloadURL);
-                userData.profilePicUrl = downloadURL; // Update userData with the download URL
-                setProfilePicUrl(downloadURL); // Update the local state with the download URL
+                userData.profilePicUrl = downloadURL;
+                setProfilePicUrl(downloadURL);
 
                 // Update profile after getting the download URL
                 await updateProfile(user, {
